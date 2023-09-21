@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Tab Page</title>
+    <link rel="stylesheet" href="style-main.css">
+</head>
+<body>
+<div id="background-container">
+</div>
+
+<div class="container">
+    <div class="top-left">
+        <div class="greeting">
+            <h1 id="greeting-message">Hello, Guest!</h1>
+            <p id="current-time">Current time: <span id="time"></span></p>
+        </div>
+    </div>
+    <div class="top-right">
+        <div class="todo">
+            <h2>Todo List</h2>
+            <ul id="todo-list">
+                <!-- Todo items will be added dynamically using JavaScript -->
+            </ul>
+            <input type="text" id="new-task" placeholder="Add a new task">
+            <button id="add-task">Add</button>
+            <label>
+                <input type="checkbox" id="show-completed"> Show Completed
+            </label>
+        </div>
+    </div>
+    <div class="bottom-left">
+        <h2>Customisation & Music</h2>
+        <a id="location-link" target="_blank"><p id="location-text"></p></a>
+        <button id="change-background">Change Background</button>
+        <div id="music-container">
+            <select id="lofi-channel">
+                <option value="PfgS405CdXk">Everything Fades To Blue</option>
+                <option value="bLlloaA4b4g">The Bootleg Boy</option>
+                <option value="qH3fETPsqXU">Chill with Taiki</option>
+                <option value="wkhLHTmS_GI">Dreamhop Music</option>
+                <option value="dxUtV-zNv9w">College Music</option>
+            </select>
+            <button id="play-pause">Play</button>
+            <div id="music-player-container">
+                <iframe id="music-player" width="1" height="1" frameborder="0" allow="autoplay; loop" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+    <div class="bottom-right">
+        <div class="profile-switcher">
+            <h2>Profile Switcher</h2>
+            <select id="profile-dropdown"></select>
+            <button id="add-profile">Add Profile</button>
+            <button id="delete-profile">Delete Profile</button>
+        </div>
+    </div>
+</div>
+<div id="profile-form-popup" class="popup">
+    <div class="popup-content">
+        <input type="text" id="new-profile-name" placeholder="Enter profile name">
+        <button id="create-blank-profile">Create Blank Profile</button>
+        <button id="create-current-profile">Create from Current Setup</button>
+        <button id="close-popup">Close</button>
+    </div>
+</div>
+<script src="script-main.js"></script>
+</body>
+</html>
