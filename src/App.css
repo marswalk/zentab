@@ -1,0 +1,105 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: #333;
+  color: #eee;
+  font-family: Helvetica, Arial;
+  font-size: 3vmin;
+}
+
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top Left Container for Greeting and Time */
+.top-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: rgba(150, 150, 150, 0.2);
+  border-radius: 10px;
+  margin: 10px;
+}
+
+/* Top Right Container for Todo Lists */
+.top-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 20px;
+  background-color: rgba(150, 150, 150, 0.2);
+  border-radius: 10px;
+  margin: 10px;
+}
+
+/* Bottom Left Container for Spotify */
+.bottom-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 20px;
+  background-color: rgba(150, 150, 150, 0.2);
+  border-radius: 10px;
+  margin: 10px;
+}
+
+/* Bottom Right Container for Background and Button */
+.bottom-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: rgba(150, 150, 150, 0.2);
+  border-radius: 10px;
+  margin: 10px;
+}
+
+/* Custom styles for Todo List items */
+.todo-list {
+  margin-bottom: 10px;
+}
+
+.buttons {
+  margin-top: 10px;
+}
+
+.btn-spotify {
+  background-color: #44c767;
+  border-radius: 28px;
+  border: 1px solid #18ab29;
+  display: inline-block;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: Arial;
+  font-size: 17px;
+  padding: 16px 31px;
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #2f6627;
+}
+
+.btn-spotify:active {
+  position: relative;
+  top: 1px;
+}
+
+img {
+  background: transparent;
+}
