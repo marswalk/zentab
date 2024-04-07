@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Flex, Text, IconButton, Link } from "@chakra-ui/react";
+import { Flex, Text, Icon, IconButton, Link } from "@chakra-ui/react";
 import { ExternalLinkIcon, RepeatIcon } from "@chakra-ui/icons";
+import { FaGlobeAmericas } from "react-icons/fa";
 
 const Background = ({ setBackground }) => {
   const [backgrounds, setBackgrounds] = useState([]);
@@ -31,7 +32,8 @@ const Background = ({ setBackground }) => {
   return (
     <div className="background-info">
       {selectedBackground && (
-        <Flex alignItems="center">
+        <Flex alignItems="center" gap='3'>
+          <FaGlobeAmericas />
           <Text fontSize="lg">
             <Link
               href={selectedBackground.map}
@@ -40,7 +42,6 @@ const Background = ({ setBackground }) => {
             >
               {selectedBackground.country}
               {selectedBackground.region && `, ${selectedBackground.region}`}
-              <ExternalLinkIcon mx="2px" marginLeft="5px" />
             </Link>
           </Text>
           <IconButton
@@ -48,8 +49,7 @@ const Background = ({ setBackground }) => {
             onClick={handleRandomBackground}
             icon={<RepeatIcon />}
             size="sm"
-            marginLeft="5px"
-            marginTop="5px"
+            
           />
         </Flex>
       )}

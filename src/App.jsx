@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import TodoList from "./components/TodoList";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
-import { Text, Flex, Button, ChakraProvider } from "@chakra-ui/react";
+import { Image, Text, Flex, Button, Icon, ChakraProvider, Link } from "@chakra-ui/react";
 import Background from "./components/Background"; // Import the Background component
 import WebPlayback from "./WebPlayback";
-import Login from "./Login";
+import { FaSpotify } from "react-icons/fa";
+
 import "./App.css";
 
 export default class App extends React.Component {
@@ -148,7 +149,7 @@ export default class App extends React.Component {
           fontFamily="Inter"
           overflow="hidden"
         >
-          <img
+          <Image
             id="background"
             src={this.state.currentBackground}
             alt="Google Earth background cannot be fetched"
@@ -160,11 +161,14 @@ export default class App extends React.Component {
             bg="rgba(150, 150, 150, 0.3)"
             borderRadius="10px"
             padding="20px"
+            backdropFilter="auto"
+            backdropBlur="6px"
           >
             <div className="greeting">
-              <Text fontSize="3xl">
-                {greeting}, the current time is {currentTime}
+              <Text fontSize="2xl" as="b">
+                {greeting},
               </Text>
+              <Text fontSize="lg">the current time is {currentTime}</Text>
             </div>
           </Flex>
           <Flex
@@ -178,6 +182,8 @@ export default class App extends React.Component {
             padding="20px"
             maxWidth="60%"
             maxHeight="70%"
+            backdropFilter="auto"
+            backdropBlur="6px"
           >
             <Flex direction="row" overflowX="scroll" maxWidth="100%">
               {this.state.lists.map((list) => (
@@ -224,8 +230,20 @@ export default class App extends React.Component {
             bg="rgba(150, 150, 150, 0.3)"
             borderRadius="10px"
             padding="20px"
+            boxShadow="md"
+            backdropFilter="auto"
+            backdropBlur="8px"
           >
-            {token === undefined ? <Login /> : <WebPlayback token={token} />}
+            {token === undefined ? (
+              <Link href="/auth/login">
+                <Button>
+                <FaSpotify fontSize="lg"/>
+                &nbsp; Connect Spotify
+                </Button>
+                </Link>
+            ) : (
+              <WebPlayback token={token} />
+            )}
           </Flex>
 
           <Flex
@@ -235,6 +253,9 @@ export default class App extends React.Component {
             bg="rgba(150, 150, 150, 0.3)"
             borderRadius="10px"
             padding="20px"
+            boxShadow="2xl"
+            backdropFilter="auto"
+            backdropBlur="8px"
           >
             <Background setBackground={this.setBackground} />
           </Flex>

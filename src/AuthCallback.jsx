@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Background from "./components/Background"; // Import the Background component
 import WebPlayback from "./WebPlayback";
-import Login from "./Login";
 import { Buffer } from "buffer";
 import queryString from "query-string";
 

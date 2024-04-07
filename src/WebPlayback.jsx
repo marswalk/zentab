@@ -1,4 +1,19 @@
 import React, { useState, useEffect } from "react";
+import {
+  IoPlayCircle,
+  IoPauseCircle,
+  IoPlaySkipBack,
+  IoPlaySkipForward,
+} from "react-icons/io5";
+import {
+  Box,
+  Image,
+  Text,
+  Flex,
+  ButtonGroup,
+  IconButton,
+} from "@chakra-ui/react";
+import { FaSpotify } from "react-icons/fa";
 
 const track = {
   name: "",
@@ -63,12 +78,19 @@ function WebPlayback(props) {
     return (
       <>
         <div className="container">
-          <div className="main-wrapper">
-            <b>
+          <Flex
+            flexDirection="row"
+            className="main-wrapper"
+            alignItems="center"
+          >
+            <FaSpotify fontSize="lg" />
+            <Text fontSize="lg" marginLeft="15px">
               {" "}
-              Instance not active. Transfer your playback using your Spotify app{" "}
-            </b>
-          </div>
+              Instance not active.
+              <br />
+              Transfer your playback using your Spotify app{" "}
+            </Text>
+          </Flex>
         </div>
       </>
     );
@@ -76,47 +98,65 @@ function WebPlayback(props) {
     return (
       <>
         <div className="container">
-          <div className="main-wrapper">
-            <img
+          <Flex className="main-wrapper">
+            <Image
               src={current_track.album.images[0].url}
               className="now-playing__cover"
               alt=""
+              boxSize="70px"
+              borderRadius="15px"
             />
 
-            <div className="now-playing__side">
-              <div className="now-playing__name">{current_track.name}</div>
-              <div className="now-playing__artist">
-                {current_track.artists[0].name}
-              </div>
+            <Flex minWidth="max-content" alignItems="center" gap="2">
+              <Box marginLeft="20px" marginRight="20px">
+                <Text fontSize="lg" as="b">
+                  {current_track.name}
+                </Text>
+                <Text fontSize="md" color="gray.200">
+                  {current_track.artists[0].name}
+                </Text>
+              </Box>
 
-              <button
-                className="btn-spotify"
-                onClick={() => {
-                  player.previousTrack();
-                }}
-              >
-                &lt;&lt;
-              </button>
-
-              <button
-                className="btn-spotify"
-                onClick={() => {
-                  player.togglePlay();
-                }}
-              >
-                {is_paused ? "PLAY" : "PAUSE"}
-              </button>
-
-              <button
-                className="btn-spotify"
-                onClick={() => {
-                  player.nextTrack();
-                }}
-              >
-                &gt;&gt;
-              </button>
-            </div>
-          </div>
+              <ButtonGroup spacing="10px">
+                <IconButton
+                  aria-label="Previous"
+                  icon={<IoPlaySkipBack />}
+                  onClick={() => {
+                    player.previousTrack();
+                  }}
+                  isRound={true}
+                  bg="none"
+                  size="100%"
+                  color="white"
+                  fontSize="25px"
+                />
+                <IconButton
+                  aria-label={is_paused ? "Play" : "Pause"}
+                  icon={is_paused ? <IoPlayCircle /> : <IoPauseCircle />}
+                  onClick={() => {
+                    player.togglePlay();
+                  }}
+                  isRound={true}
+                  bg="none"
+                  size="100%"
+                  color="white"
+                  fontSize="50px"
+                />
+                <IconButton
+                  aria-label="Next"
+                  icon={<IoPlaySkipForward />}
+                  onClick={() => {
+                    player.nextTrack();
+                  }}
+                  isRound={true}
+                  bg="none"
+                  size="100%"
+                  color="white"
+                  fontSize="25px"
+                />
+              </ButtonGroup>
+            </Flex>
+          </Flex>
         </div>
       </>
     );
