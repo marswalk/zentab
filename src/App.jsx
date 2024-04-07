@@ -7,7 +7,6 @@ import { Text, Flex, Button, ChakraProvider } from "@chakra-ui/react";
 import Background from "./components/Background"; // Import the Background component
 import WebPlayback from "./WebPlayback";
 import Login from "./Login";
-import Clock from "./components/Clock";
 import "./App.css";
 
 export default class App extends React.Component {
@@ -16,7 +15,7 @@ export default class App extends React.Component {
     this.state = {
       lists: [],
       currentBackground: null, // State to store current background image URL
-      token: "",
+      token: undefined,
     };
   }
 
@@ -38,9 +37,12 @@ export default class App extends React.Component {
 
   async getToken() {
     try {
-      const response = await fetch("/auth/token");
-      const json = await response.json();
-      this.setState({ token: json.access_token });
+      const token = localStorage.getItem("access_token");
+      if (token === undefined || token === null) {
+        return;
+      }
+      console.log("USING TOKEN", token);
+      this.setState({ token: token });
     } catch (error) {
       console.error("Error fetching token:", error);
     }
@@ -223,7 +225,7 @@ export default class App extends React.Component {
             borderRadius="10px"
             padding="20px"
           >
-            {token === "" ? <Login /> : <WebPlayback token={token} />}
+            {token === undefined ? <Login /> : <WebPlayback token={token} />}
           </Flex>
 
           <Flex

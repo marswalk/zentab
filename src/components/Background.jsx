@@ -44,7 +44,7 @@ const Background = ({ setBackground }) => {
             </Link>
           </Text>
           <IconButton
-            aria-text="Random Background"
+            aria-label="Random Background"
             onClick={handleRandomBackground}
             icon={<RepeatIcon />}
             size="sm"

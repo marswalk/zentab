@@ -2,6 +2,8 @@ const express = require("express");
 const request = require("request");
 const dotenv = require("dotenv");
 
+console.log("SERVER LOGGING");
+
 const port = 5000;
 
 global.access_token = "";
@@ -27,6 +29,7 @@ var generateRandomString = function (length) {
 var app = express();
 
 app.get("/auth/login", (req, res) => {
+  console.log("APP AUTH TRIGGERED");
   var scope = "streaming user-read-email user-read-private";
   var state = generateRandomString(16);
 

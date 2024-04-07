@@ -15,6 +15,7 @@ function WebPlayback(props) {
   const [current_track, setTrack] = useState(track);
 
   useEffect(() => {
+    console.log("WebPlayback TESTER");
     const script = document.createElement("script");
     script.src = "https://sdk.scdn.co/spotify-player.js";
     script.async = true;
@@ -25,6 +26,7 @@ function WebPlayback(props) {
       const player = new window.Spotify.Player({
         name: "Web Playback SDK",
         getOAuthToken: (cb) => {
+          console.log("INSIDE TOKEN", props.token);
           cb(props.token);
         },
         volume: 0.5,

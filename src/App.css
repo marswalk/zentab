@@ -27,7 +27,7 @@ body {
 }
 
 #background {
-  height: 100%;
+  height: auto;
   position: absolute;
   width: 100%;
 }
