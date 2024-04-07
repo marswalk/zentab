@@ -1,6 +1,8 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
+import { Button, IconButton, Input, Stack } from "@chakra-ui/react";
+import { ArrowUpIcon } from "@chakra-ui/icons";
 
 class AddTaskForm extends React.Component {
   constructor(props) {
@@ -36,18 +38,30 @@ class AddTaskForm extends React.Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <input
-          type="text"
-          placeholder="Enter task"
-          value={this.state.text}
-          onChange={this.handleTextChange}
-        />
-        <input
-          type="date"
-          value={this.state.dueDate}
-          onChange={this.handleDueDateChange}
-        />
-        <button type="submit">Add Task</button>
+        <Stack direction="row" spacing={2} marginTop="10px">
+          <Input
+            type="text"
+            placeholder="New task"
+            _placeholder={{ opacity: 0.8, color: "white" }}
+            value={this.state.text}
+            onChange={this.handleTextChange}
+            size="sm"
+            width="auto"
+          />
+          <Input
+            type="date"
+            value={this.state.dueDate}
+            onChange={this.handleDueDateChange}
+            size="sm"
+            width="auto"
+          />
+          <IconButton
+            type="submit"
+            aria-label="Add Task"
+            icon={<ArrowUpIcon />}
+            size="sm"
+          />
+        </Stack>
       </form>
     );
   }

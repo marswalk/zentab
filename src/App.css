@@ -10,9 +10,13 @@ body {
 }
 
 body {
-  background-color: #333;
+  background-color: radial-gradient(
+    circle,
+    rgba(49, 81, 244, 1) 0%,
+    rgba(255, 44, 44, 1) 100%
+  );
   color: #eee;
-  font-family: Helvetica, Arial;
+  font-family: Inter;
   font-size: 3vmin;
 }
 
@@ -22,54 +26,10 @@ body {
   flex-direction: column;
 }
 
-/* Top Left Container for Greeting and Time */
-.top-left {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  background-color: rgba(150, 150, 150, 0.2);
-  border-radius: 10px;
-  margin: 10px;
-}
-
-/* Top Right Container for Todo Lists */
-.top-right {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  padding: 20px;
-  background-color: rgba(150, 150, 150, 0.2);
-  border-radius: 10px;
-  margin: 10px;
-}
-
-/* Bottom Left Container for Spotify */
-.bottom-left {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 20px;
-  background-color: rgba(150, 150, 150, 0.2);
-  border-radius: 10px;
-  margin: 10px;
-}
-
-/* Bottom Right Container for Background and Button */
-.bottom-right {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  background-color: rgba(150, 150, 150, 0.2);
-  border-radius: 10px;
-  margin: 10px;
+#background {
+  height: 100%;
+  position: absolute;
+  width: 100%;
 }
 
 /* Custom styles for Todo List items */
@@ -88,7 +48,7 @@ body {
   display: inline-block;
   cursor: pointer;
   color: #ffffff;
-  font-family: Arial;
+  font-family: Inter;
   font-size: 17px;
   padding: 16px 31px;
   text-decoration: none;

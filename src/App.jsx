@@ -1,10 +1,13 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import TodoList from "./components/TodoList";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
+import { Text, Flex, Button, ChakraProvider } from "@chakra-ui/react";
 import Background from "./components/Background"; // Import the Background component
 import WebPlayback from "./WebPlayback";
 import Login from "./Login";
+import Clock from "./components/Clock";
 import "./App.css";
 
 export default class App extends React.Component {
@@ -74,6 +77,7 @@ export default class App extends React.Component {
     });
     this.setState({ lists: updatedLists });
     this.componentDidUpdate();
+    console.log("HandleTaskAdd called App.jsx");
   };
 
   handleListDelete = (listId) => {
@@ -103,14 +107,25 @@ export default class App extends React.Component {
     this.componentDidUpdate();
   };
 
-  handleTaskEdit = (taskId, newText) => {
+  handleTaskEdit = (taskId, newText, newDate) => {
     const updatedLists = this.state.lists.map((list) => {
       const updatedTasks = list.tasks.map((task) => {
         if (task.id === taskId) {
-          return { ...task, text: newText };
+          return { ...task, text: newText, dueDate: newDate };
         }
         return task;
       });
+
+      return { ...list, tasks: updatedTasks };
+    });
+    console.log("HANDLE TASK EDITED AFWF");
+    this.setState({ lists: updatedLists });
+    this.componentDidUpdate();
+  };
+
+  handleTaskDelete = (taskId) => {
+    const updatedLists = this.state.lists.map((list) => {
+      const updatedTasks = list.tasks.filter((task) => task.id !== taskId);
       return { ...list, tasks: updatedTasks };
     });
     this.setState({ lists: updatedLists });
@@ -120,47 +135,109 @@ export default class App extends React.Component {
   render() {
     const { greeting, currentTime } = this.state;
     const { token } = this.state;
+    const currentHour = new Date().getHours();
     return (
-      <div
-        className="app"
-        style={{ backgroundImage: `url(${this.state.currentBackground})` }}
-      >
-        <div className="top-left">
-          <div className="greeting">
-            <p>
-              {greeting}, the current time is {currentTime}
-            </p>
-          </div>
-        </div>
-        <div className="top-right">
-          {this.state.lists.map((list) => (
-            <TodoList
-              key={list.id}
-              title={list.title}
-              tasks={list.tasks}
-              onTaskAdd={(newTask) => this.handleTaskAdd(newTask, list.id)}
-              onListDelete={() => this.handleListDelete(list.id)}
-              onListRename={(newTitle) =>
-                this.handleListRename(list.id, newTitle)
-              }
-              onTaskEdit={(taskId, newText) =>
-                this.handleTaskEdit(taskId, newText)
-              }
-            />
-          ))}
-          <div className="buttons">
-            <button onClick={this.handleNewList}>Create New List</button>
-          </div>
-        </div>
+      <ChakraProvider>
+        <Flex
+          position="relative"
+          height="100vh"
+          bg="radial-gradient(circle, rgba(49,81,244,1) 0%, rgba(255,44,44,1) 100%);"
+          color="#eee"
+          fontFamily="Inter"
+          overflow="hidden"
+        >
+          <img
+            id="background"
+            src={this.state.currentBackground}
+            alt="Google Earth background cannot be fetched"
+          />
+          <Flex
+            position="absolute"
+            top="10px"
+            left="10px"
+            bg="rgba(150, 150, 150, 0.3)"
+            borderRadius="10px"
+            padding="20px"
+          >
+            <div className="greeting">
+              <Text fontSize="3xl">
+                {greeting}, the current time is {currentTime}
+              </Text>
+            </div>
+          </Flex>
+          <Flex
+            position="absolute"
+            top="10px"
+            right="10px"
+            flexDirection="column"
+            alignItems="flex-end"
+            bg="rgba(150, 150, 150, 0.3)"
+            borderRadius="10px"
+            padding="20px"
+            maxWidth="60%"
+            maxHeight="70%"
+          >
+            <Flex direction="row" overflowX="scroll" maxWidth="100%">
+              {this.state.lists.map((list) => (
+                <Flex
+                  key={list.id}
+                  flexDirection="column"
+                  alignItems="flex-end"
+                  bg="rgba(150, 150, 150, 0.3)"
+                  color="#eee"
+                  borderRadius="8px"
+                  padding="10px"
+                  margin="5px"
+                  overflowY="scroll"
+                  maxHeight="100%"
+                >
+                  <TodoList
+                    key={list.id}
+                    title={list.title}
+                    tasks={list.tasks}
+                    onTaskAdd={(newTask) =>
+                      this.handleTaskAdd(newTask, list.id)
+                    }
+                    onListDelete={() => this.handleListDelete(list.id)}
+                    onListRename={(newTitle) =>
+                      this.handleListRename(list.id, newTitle)
+                    }
+                    onTaskEdit={(taskId, newText, newDate) =>
+                      this.handleTaskEdit(taskId, newText, newDate)
+                    }
+                    onTaskDelete={(taskId) => this.handleTaskDelete(taskId)}
+                  />
+                </Flex>
+              ))}
+            </Flex>
+            <Button onClick={this.handleNewList} marginTop="10px" size="sm">
+              Create New List
+            </Button>
+          </Flex>
 
-        <div className="bottomLeft">
-          {token === "" ? <Login /> : <WebPlayback token={token} />}
-        </div>
+          <Flex
+            position="absolute"
+            bottom="10px"
+            left="10px"
+            bg="rgba(150, 150, 150, 0.3)"
+            borderRadius="10px"
+            padding="20px"
+          >
+            {token === "" ? <Login /> : <WebPlayback token={token} />}
+          </Flex>
 
-        <div className="bottom-right">
-          <Background setBackground={this.setBackground} />
-        </div>
-      </div>
+          <Flex
+            position="absolute"
+            bottom="10px"
+            right="10px"
+            bg="rgba(150, 150, 150, 0.3)"
+            borderRadius="10px"
+            padding="20px"
+          >
+            <Background setBackground={this.setBackground} />
+          </Flex>
+        </Flex>
+      </ChakraProvider>
     );
   }
 }

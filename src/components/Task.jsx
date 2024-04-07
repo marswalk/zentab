@@ -1,4 +1,14 @@
 import React from "react";
+import {
+  IconButton,
+  Input,
+  Text,
+  Button,
+  Stack,
+  Checkbox,
+} from "@chakra-ui/react";
+import { DeleteIcon, CheckIcon } from "@chakra-ui/icons";
+import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
 
 class Task extends React.Component {
   constructor(props) {
@@ -7,30 +17,27 @@ class Task extends React.Component {
       completed: this.props.task.completed,
       isEditing: false,
       taskText: this.props.task.text,
-      dueDate: this.props.task.dueDate.format("YYYY-MM-DD"),
+      dueDate: this.props.task.dueDate,
+      // dueDate: "",
       pinned: false, // New property to indicate if task is pinned
     };
   }
 
   toggleComplete = () => {
     this.setState({ completed: !this.state.completed });
+    console.log("TTASK CHECKED AS DONE", this.state.completed);
   };
 
   togglePin = () => {
     const { task, onTaskEdit } = this.props;
-    const updatedTask = { ...task, pinned: !task.pinned };
-    onTaskEdit(
-      task.id,
-      updatedTask.text,
-      updatedTask.dueDate,
-      updatedTask.completed,
-      updatedTask.pinned,
-    );
+    console.log("TESTER", this.state.pinned);
+    this.setState({ pinned: !this.state.pinned });
   };
 
   handleTogglePin = () => {
     const { task, onTogglePin } = this.props;
-    onTogglePin(task.id);
+    this.togglePin();
+    onTogglePin(this.props.task.id, this.state.pinned);
   };
 
   handleTaskEdit = () => {
@@ -61,41 +68,61 @@ class Task extends React.Component {
 
     return (
       <div className={`task ${completed ? "completed" : ""}`}>
-        <div>
-          <input
-            type="checkbox"
-            checked={completed}
-            onChange={this.toggleComplete}
-          />
-          <span
-            onClick={() => this.setState({ isEditing: true })}
-            className={completed ? "completed-text" : ""}
-          >
-            {task.text}
-          </span>
-          <button onClick={this.handleTogglePin}>
-            {task.pinned ? "Unpin" : "Pin"}
-          </button>
-        </div>
         {isEditing ? (
           <div>
-            <input
-              type="text"
-              value={taskText}
-              onChange={this.handleTaskTextChange}
-            />
-            <input
-              type="date"
-              value={dueDate}
-              onChange={this.handleDueDateChange}
-            />
-            <button onClick={this.handleTaskEdit}>Save</button>
+            <Stack direction="row" spacing={2}>
+              <Input
+                type="text"
+                value={taskText}
+                placeholder="Edited task can't be empty"
+                _placeholder={{ opacity: 0.8, color: "white" }}
+                onChange={this.handleTaskTextChange}
+                size="sm"
+                width="auto"
+              />
+              <Input
+                type="date"
+                value={dueDate}
+                onChange={this.handleDueDateChange}
+                size="sm"
+                width="auto"
+              />
+              <IconButton
+                onClick={this.handleTaskEdit}
+                icon={<CheckIcon />}
+                size="sm"
+              />
+            </Stack>
           </div>
         ) : (
-          <div>
-            <span>{moment(dueDate).fromNow()}</span>
-            <button onClick={this.handleTaskDelete}>Delete</button>
-          </div>
+          <Stack direction="row" spacing={2}>
+            <Checkbox
+              size="sm"
+              colorScheme="green"
+              isChecked={completed}
+              onChange={this.toggleComplete}
+            />
+            <Text
+              onClick={() => this.setState({ isEditing: true })}
+              className={completed ? "completed-text" : ""}
+              fontSize="xl"
+            >
+              {task.text}
+            </Text>
+            <Text fontSize="lg">- due {moment(dueDate).fromNow()}</Text>
+            <IconButton
+              onClick={this.handleTogglePin}
+              icon={task.pinned ? <RiUnpinFill /> : <RiPushpinFill />}
+              aria-label={task.pinned ? "Unpin" : "Pin"}
+              size="xs"
+            />
+            <IconButton
+              onClick={this.handleTaskDelete}
+              aria-label="Delete Task"
+              icon={<DeleteIcon />}
+              size="xs"
+            />
+          </Stack>
         )}
       </div>
     );
