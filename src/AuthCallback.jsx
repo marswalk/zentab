@@ -15,8 +15,8 @@ export default class AuthCallback extends React.Component {
   }
 
   async componentDidMount() {
-    const spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
-    const spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
+    const spotify_client_id = "3a3ec62d2eff4bff95306f264a4cf571";
+    const spotify_client_secret = "b43a15aecfeb4f8b9a1b961c3865eca0";
 
     console.log("MOUNTED");
 

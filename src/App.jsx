@@ -3,7 +3,15 @@ import { useEffect, useState } from "react";
 import TodoList from "./components/TodoList";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
-import { Image, Text, Flex, Button, Icon, ChakraProvider, Link } from "@chakra-ui/react";
+import {
+  Image,
+  Text,
+  Flex,
+  Button,
+  Icon,
+  ChakraProvider,
+  Link,
+} from "@chakra-ui/react";
 import Background from "./components/Background"; // Import the Background component
 import WebPlayback from "./WebPlayback";
 import { FaSpotify } from "react-icons/fa";
@@ -29,8 +37,9 @@ export default class App extends React.Component {
       this.setState({ lists: JSON.parse(storedLists) });
     }
     this.getToken();
-  }
 
+    setInterval(() => this.setCurrentTime(), 1000);
+  }
   componentDidUpdate() {
     console.log("UPDATING", JSON.stringify(this.state.lists));
     localStorage.setItem("todoLists", JSON.stringify(this.state.lists));
@@ -138,7 +147,6 @@ export default class App extends React.Component {
   render() {
     const { greeting, currentTime } = this.state;
     const { token } = this.state;
-    const currentHour = new Date().getHours();
     return (
       <ChakraProvider>
         <Flex
@@ -150,7 +158,7 @@ export default class App extends React.Component {
           overflow="hidden"
         >
           <Image
-            id="background"
+            class="fillbackground"
             src={this.state.currentBackground}
             alt="Google Earth background cannot be fetched"
           />
@@ -237,10 +245,10 @@ export default class App extends React.Component {
             {token === undefined ? (
               <Link href="/auth/login">
                 <Button>
-                <FaSpotify fontSize="lg"/>
-                &nbsp; Connect Spotify
+                  <FaSpotify fontSize="lg" />
+                  &nbsp; Connect Spotify
                 </Button>
-                </Link>
+              </Link>
             ) : (
               <WebPlayback token={token} />
             )}

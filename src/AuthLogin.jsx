@@ -13,11 +13,13 @@ export default class AuthLogin extends React.Component {
   }
 
   componentDidMount() {
-    const spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
-    const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
+    console.log();
+    const spotify_client_id = "3a3ec62d2eff4bff95306f264a4cf571";
+    const spotify_client_secret = "b43a15aecfeb4f8b9a1b961c3865eca0";
 
     console.log("MOUNTED");
-    var scope = "streaming user-read-email user-read-private";
+    var scope =
+      "streaming user-read-email user-read-private user-read-currently-playing user-modify-playback-state user-read-playback-state";
     var state = this.generateRandomString(16);
     console.log("STATE", state);
 

@@ -12,6 +12,11 @@ import {
   Flex,
   ButtonGroup,
   IconButton,
+  Slider,
+  SliderTrack,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderMark,
 } from "@chakra-ui/react";
 import { FaSpotify } from "react-icons/fa";
 
@@ -23,56 +28,90 @@ const track = {
   artists: [{ name: "" }],
 };
 
+let current_track = track.album;
+let is_active = false;
+let is_paused = false;
+let slider_control = false;
+let start_time = 0;
+let duration_time = 1;
+let progress_val = 0;
+
 function WebPlayback(props) {
-  const [is_paused, setPaused] = useState(false);
-  const [is_active, setActive] = useState(false);
-  const [player, setPlayer] = useState(undefined);
-  const [current_track, setTrack] = useState(track);
+  const SendUrl = async (url, method) => {
+    var authOptions = {
+      method: method,
+      headers: {
+        Authorization: "Bearer " + props.token,
+      },
+    };
+    console.log(authOptions);
+    let output = null;
+    const response = await fetch(url, authOptions)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson);
+        output = responseJson;
+        //current_track = responseJson["item"];
+
+        //is_active = true;
+      });
+
+    return output;
+  };
 
   useEffect(() => {
-    console.log("WebPlayback TESTER");
-    const script = document.createElement("script");
-    script.src = "https://sdk.scdn.co/spotify-player.js";
-    script.async = true;
+    startup();
 
-    document.body.appendChild(script);
-
-    window.onSpotifyWebPlaybackSDKReady = () => {
-      const player = new window.Spotify.Player({
-        name: "Web Playback SDK",
-        getOAuthToken: (cb) => {
-          console.log("INSIDE TOKEN", props.token);
-          cb(props.token);
-        },
-        volume: 0.5,
-      });
-
-      setPlayer(player);
-
-      player.addListener("ready", ({ device_id }) => {
-        console.log("Ready with Device ID", device_id);
-      });
-
-      player.addListener("not_ready", ({ device_id }) => {
-        console.log("Device ID has gone offline", device_id);
-      });
-
-      player.addListener("player_state_changed", (state) => {
-        if (!state) {
-          return;
-        }
-
-        setTrack(state.track_window.current_track);
-        setPaused(state.paused);
-
-        player.getCurrentState().then((state) => {
-          !state ? setActive(false) : setActive(true);
-        });
-      });
-
-      player.connect();
-    };
+    setInterval(() => update(), 2000);
+    setInterval(() => slider_update(), 500);
   }, []);
+
+  const startup = async () => {
+    console.log("HITTER");
+
+    const info = await SendUrl("https://api.spotify.com/v1/me/player", "GET");
+    console.log(info);
+    current_track = info["item"];
+    is_active = true;
+  };
+
+  const update = async () => {
+    const info = await SendUrl("https://api.spotify.com/v1/me/player", "GET");
+    console.log(info);
+    current_track = info["item"];
+    is_paused = !info["is_playing"];
+    is_active = true;
+
+    const time = Date.now();
+    start_time = time - info["progress_ms"];
+    duration_time = current_track["duration_ms"];
+  };
+
+  const slider_update = async () => {
+    if (slider_control === true) {
+      return;
+    }
+    const time = Date.now();
+    const diff = time - start_time;
+    progress_val = Math.round((diff / duration_time) * 1000);
+    console.log("PROGRESS", progress_val);
+  };
+
+  const buttonPress = async (type) => {
+    if (type === "play") {
+      is_paused = !is_paused;
+      const url = !is_paused
+        ? "https://api.spotify.com/v1/me/player/play"
+        : "https://api.spotify.com/v1/me/player/pause";
+      console.log(url);
+
+      await SendUrl(url, "PUT");
+    } else if (type === "right") {
+      await SendUrl("https://api.spotify.com/v1/me/player/next", "POST");
+    } else if (type === "left") {
+      await SendUrl("https://api.spotify.com/v1/me/player/previous", "POST");
+    }
+  };
 
   if (!is_active) {
     return (
@@ -98,63 +137,94 @@ function WebPlayback(props) {
     return (
       <>
         <div className="container">
-          <Flex className="main-wrapper">
+          <Flex className="main-wrapper" gap="5">
             <Image
               src={current_track.album.images[0].url}
               className="now-playing__cover"
               alt=""
-              boxSize="70px"
+              boxSize="75px"
               borderRadius="15px"
             />
+            <Flex direction="column" alignItems="center" gap="1">
+              <Flex minWidth="max-content" alignItems="center" gap="5">
+                <Box>
+                  <Text fontSize="lg" as="b">
+                    {current_track.name}
+                  </Text>
+                  <Text fontSize="md" color="gray.200">
+                    {current_track.artists[0].name}
+                  </Text>
+                </Box>
 
-            <Flex minWidth="max-content" alignItems="center" gap="2">
-              <Box marginLeft="20px" marginRight="20px">
-                <Text fontSize="lg" as="b">
-                  {current_track.name}
-                </Text>
-                <Text fontSize="md" color="gray.200">
-                  {current_track.artists[0].name}
-                </Text>
-              </Box>
+                <ButtonGroup spacing="10px">
+                  <IconButton
+                    aria-label="Previous"
+                    icon={<IoPlaySkipBack />}
+                    onClick={() => {
+                      buttonPress("left");
+                    }}
+                    isRound={true}
+                    bg="none"
+                    size="100%"
+                    color="white"
+                    fontSize="25px"
+                  />
+                  <IconButton
+                    aria-label={is_paused ? "Play" : "Pause"}
+                    icon={is_paused ? <IoPlayCircle /> : <IoPauseCircle />}
+                    onClick={() => {
+                      buttonPress("play");
+                    }}
+                    isRound={true}
+                    bg="none"
+                    size="100%"
+                    color="white"
+                    fontSize="50px"
+                  />
+                  <IconButton
+                    aria-label="Next"
+                    icon={<IoPlaySkipForward />}
+                    onClick={() => {
+                      buttonPress("right");
+                    }}
+                    isRound={true}
+                    bg="none"
+                    size="100%"
+                    color="white"
+                    fontSize="25px"
+                  />
+                </ButtonGroup>
+              </Flex>
+              <Slider
+                id="SLIDER-ID"
+                aria-label="seek"
+                min={0}
+                max={1000}
+                value={slider_control ? undefined : progress_val}
+                onChangeStart={(value) => {
+                  slider_control = true;
+                  console.log("CONTROL");
+                }}
+                onChangeEnd={async (value) => {
+                  slider_control = false;
+                  await SendUrl(
+                    `https://api.spotify.com/v1/me/player/seek?position_ms=${Math.round((value / 1000) * duration_time)}`,
+                    "PUT",
+                  );
+                  console.log("CONTROL GONE");
+                  start_time =
+                    Date.now() - Math.round((value / 1000) * duration_time);
 
-              <ButtonGroup spacing="10px">
-                <IconButton
-                  aria-label="Previous"
-                  icon={<IoPlaySkipBack />}
-                  onClick={() => {
-                    player.previousTrack();
-                  }}
-                  isRound={true}
-                  bg="none"
-                  size="100%"
-                  color="white"
-                  fontSize="25px"
-                />
-                <IconButton
-                  aria-label={is_paused ? "Play" : "Pause"}
-                  icon={is_paused ? <IoPlayCircle /> : <IoPauseCircle />}
-                  onClick={() => {
-                    player.togglePlay();
-                  }}
-                  isRound={true}
-                  bg="none"
-                  size="100%"
-                  color="white"
-                  fontSize="50px"
-                />
-                <IconButton
-                  aria-label="Next"
-                  icon={<IoPlaySkipForward />}
-                  onClick={() => {
-                    player.nextTrack();
-                  }}
-                  isRound={true}
-                  bg="none"
-                  size="100%"
-                  color="white"
-                  fontSize="25px"
-                />
-              </ButtonGroup>
+                  setTimeout(() => {
+                    update();
+                  }, 1000);
+                }}
+              >
+                <SliderTrack>
+                  <SliderFilledTrack />
+                </SliderTrack>
+                <SliderThumb />
+              </Slider>
             </Flex>
           </Flex>
         </div>
