@@ -27,7 +27,7 @@ export default class AuthLogin extends React.Component {
       response_type: "code",
       client_id: spotify_client_id,
       scope: scope,
-      redirect_uri: "https://hxy4xq-5173.csb.app/auth/callback",
+      redirect_uri: window.location.origin + "/auth/callback",
       state: state,
     });
 
