@@ -15,6 +15,8 @@ import {
 import Background from "./components/Background"; // Import the Background component
 import WebPlayback from "./WebPlayback";
 import { FaSpotify } from "react-icons/fa";
+import queryString from "query-string";
+import { Buffer } from "buffer";
 
 import "./App.css";
 
@@ -39,6 +41,8 @@ export default class App extends React.Component {
     this.getToken();
 
     setInterval(() => this.setCurrentTime(), 1000);
+    setInterval(() => this.refreshToken(), 1000 * 60 * 30); // 30 minutes btw
+    setTimeout(() => this.refreshToken(), 5000);
   }
   componentDidUpdate() {
     console.log("UPDATING", JSON.stringify(this.state.lists));
@@ -74,6 +78,39 @@ export default class App extends React.Component {
   setCurrentTime = () => {
     const currentTime = moment().format("LT");
     this.setState({ currentTime });
+  };
+
+  refreshToken = async () => {
+    const spotify_client_id = "3a3ec62d2eff4bff95306f264a4cf571";
+    const spotify_client_secret = "b43a15aecfeb4f8b9a1b961c3865eca0";
+
+    // refresh token that has been previously stored
+    const refreshToken = localStorage.getItem("refresh_token");
+    const url = "https://accounts.spotify.com/api/token";
+
+    if (refreshToken === undefined || refreshToken === null) {
+      return;
+    }
+    console.log("REFRESH TOKEN", refreshToken);
+    const payload = {
+      method: "POST",
+      headers: {
+        Authorization:
+          "Basic " +
+          Buffer.from(spotify_client_id + ":" + spotify_client_secret).toString(
+            "base64",
+          ),
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: queryString.stringify({
+        grant_type: "refresh_token",
+        refresh_token: refreshToken,
+      }),
+    };
+    const body = await fetch(url, payload);
+    const response = await body.json();
+
+    localStorage.setItem("access_token", response["access_token"]);
   };
 
   setBackground = (background) => {

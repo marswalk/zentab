@@ -44,3 +44,11 @@ body {
 img {
   background: transparent;
 }
+
+/* styles for Spotify player slider */
+.spotifyslider {
+  opacity: 0;
+}
+.spotifyslider:hover {
+  opacity: 1;
+}

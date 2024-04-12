@@ -52,6 +52,7 @@ export default class AuthCallback extends React.Component {
       .then((responseJson) => {
         console.log(responseJson);
         localStorage.setItem("access_token", responseJson["access_token"]);
+        localStorage.setItem("refresh_token", responseJson["refresh_token"]);
         window.location.href = "https://hxy4xq-5173.csb.app/";
       });
   }

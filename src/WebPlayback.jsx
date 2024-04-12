@@ -19,6 +19,7 @@ import {
   SliderMark,
 } from "@chakra-ui/react";
 import { FaSpotify } from "react-icons/fa";
+import "./App.css";
 
 const track = {
   name: "",
@@ -137,94 +138,104 @@ function WebPlayback(props) {
     return (
       <>
         <div className="container">
-          <Flex className="main-wrapper" gap="5">
-            <Image
-              src={current_track.album.images[0].url}
-              className="now-playing__cover"
-              alt=""
-              boxSize="75px"
-              borderRadius="15px"
-            />
-            <Flex direction="column" alignItems="center" gap="1">
-              <Flex minWidth="max-content" alignItems="center" gap="5">
-                <Box>
-                  <Text fontSize="lg" as="b">
-                    {current_track.name}
-                  </Text>
-                  <Text fontSize="md" color="gray.200">
-                    {current_track.artists[0].name}
-                  </Text>
-                </Box>
+          <Flex className="main-wrapper" direction="column" alignItems="left" gap="4">
+            <Flex direction="row" alignItems="center" gap="2">
+            <FaSpotify size="20px" />
+            <Text fontSize="sm" as="b">
+            Now playing
+            </Text>
+            </Flex>
+            <Flex gap="5">
+              <Image
+                src={current_track.album.images[0].url}
+                className="now-playing__cover"
+                alt=""
+                boxSize="75px"
+                borderRadius="15px"
+              />
+              <Flex direction="column" alignItems="center" gap="1">
+                <Flex minWidth="max-content" alignItems="center" gap="5">
+                  <Box>
+                    <Text fontSize="lg" as="b">
+                      {current_track.name}
+                    </Text>
+                    <Text fontSize="md" color="gray.200">
+                      {current_track.artists[0].name}
+                    </Text>
+                  </Box>
 
-                <ButtonGroup spacing="10px">
-                  <IconButton
-                    aria-label="Previous"
-                    icon={<IoPlaySkipBack />}
-                    onClick={() => {
-                      buttonPress("left");
-                    }}
-                    isRound={true}
-                    bg="none"
-                    size="100%"
-                    color="white"
-                    fontSize="25px"
-                  />
-                  <IconButton
-                    aria-label={is_paused ? "Play" : "Pause"}
-                    icon={is_paused ? <IoPlayCircle /> : <IoPauseCircle />}
-                    onClick={() => {
-                      buttonPress("play");
-                    }}
-                    isRound={true}
-                    bg="none"
-                    size="100%"
-                    color="white"
-                    fontSize="50px"
-                  />
-                  <IconButton
-                    aria-label="Next"
-                    icon={<IoPlaySkipForward />}
-                    onClick={() => {
-                      buttonPress("right");
-                    }}
-                    isRound={true}
-                    bg="none"
-                    size="100%"
-                    color="white"
-                    fontSize="25px"
-                  />
-                </ButtonGroup>
+                  <ButtonGroup spacing="10px">
+                    <IconButton
+                      aria-label="Previous"
+                      icon={<IoPlaySkipBack />}
+                      onClick={() => {
+                        buttonPress("left");
+                      }}
+                      isRound={true}
+                      bg="none"
+                      size="100%"
+                      color="white"
+                      fontSize="25px"
+                    />
+                    <IconButton
+                      aria-label={is_paused ? "Play" : "Pause"}
+                      icon={is_paused ? <IoPlayCircle /> : <IoPauseCircle />}
+                      onClick={() => {
+                        buttonPress("play");
+                      }}
+                      isRound={true}
+                      bg="none"
+                      size="100%"
+                      color="white"
+                      fontSize="50px"
+                    />
+                    <IconButton
+                      aria-label="Next"
+                      icon={<IoPlaySkipForward />}
+                      onClick={() => {
+                        buttonPress("right");
+                      }}
+                      isRound={true}
+                      bg="none"
+                      size="100%"
+                      color="white"
+                      fontSize="25px"
+                    />
+                  </ButtonGroup>
+                </Flex>
+                <Slider
+                  id="SLIDER-ID"
+                  aria-label="seek"
+                  min={0}
+                  max={1000}
+                  value={slider_control ? undefined : progress_val}
+                  onChangeStart={(value) => {
+                    slider_control = true;
+                    console.log("CONTROL");
+                  }}
+                  onChangeEnd={async (value) => {
+                    slider_control = false;
+                    await SendUrl(
+                      `https://api.spotify.com/v1/me/player/seek?position_ms=${Math.round((value / 1000) * duration_time)}`,
+                      "PUT",
+                    );
+                    console.log("CONTROL GONE");
+                    start_time =
+                      Date.now() - Math.round((value / 1000) * duration_time);
+
+                    setTimeout(() => {
+                      update();
+                    }, 1000);
+                  }}
+                  colorScheme="green"
+                  focusThumbOnChange={false}
+                >
+                  <SliderTrack>
+                    <SliderFilledTrack />
+                  </SliderTrack>
+                  <SliderThumb className="spotifyslider" />
+                </Slider>
               </Flex>
-              <Slider
-                id="SLIDER-ID"
-                aria-label="seek"
-                min={0}
-                max={1000}
-                value={slider_control ? undefined : progress_val}
-                onChangeStart={(value) => {
-                  slider_control = true;
-                  console.log("CONTROL");
-                }}
-                onChangeEnd={async (value) => {
-                  slider_control = false;
-                  await SendUrl(
-                    `https://api.spotify.com/v1/me/player/seek?position_ms=${Math.round((value / 1000) * duration_time)}`,
-                    "PUT",
-                  );
-                  console.log("CONTROL GONE");
-                  start_time =
-                    Date.now() - Math.round((value / 1000) * duration_time);
-
-                  setTimeout(() => {
-                    update();
-                  }, 1000);
-                }}
-              >
-                <SliderTrack>
-                  <SliderFilledTrack />
-                </SliderTrack>
-                <SliderThumb />
-              </Slider>
             </Flex>
           </Flex>
         </div>
