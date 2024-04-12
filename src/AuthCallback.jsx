@@ -30,7 +30,7 @@ export default class AuthCallback extends React.Component {
       method: "POST",
       body: queryString.stringify({
         code: code,
-        redirect_uri: "https://hxy4xq-5173.csb.app/auth/callback",
+        redirect_uri: window.location.origin + "/auth/callback",
         grant_type: "authorization_code",
       }),
       headers: {
@@ -53,7 +53,7 @@ export default class AuthCallback extends React.Component {
         console.log(responseJson);
         localStorage.setItem("access_token", responseJson["access_token"]);
         localStorage.setItem("refresh_token", responseJson["refresh_token"]);
-        window.location.href = "https://hxy4xq-5173.csb.app/";
+        window.location.href = window.location.origin;
       });
   }
 
