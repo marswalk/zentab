@@ -14,8 +14,8 @@ export default class AuthLogin extends React.Component {
 
   componentDidMount() {
     console.log();
-    const spotify_client_id = "3a3ec62d2eff4bff95306f264a4cf571";
-    const spotify_client_secret = "b43a15aecfeb4f8b9a1b961c3865eca0";
+    const spotify_client_id = "58f4e7693bea44cdbc62061fb3e78ba3";
+    const spotify_client_secret = "0da72285d2f74f0f8a4a136828d6e248";
 
     console.log("MOUNTED");
     var scope =
